@@ -1,0 +1,61 @@
+{
+  "name": "react-minecraft",
+  "version": "1.0.0",
+  "description": "React hooks and components for Minecraft resource pack development",
+  "keywords": [
+    "minecraft",
+    "resource pack",
+    "react",
+    "hooks",
+    "components"
+  ],
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "homepage": "https://github.com/Juknum/react-minecraft",
+  "bugs": {
+    "url": "https://github.com/Juknum/react-minecraft/issues"
+  },
+  "author": {
+    "name": "Juknum"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Juknum/react-minecraft.git"
+  },
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.15.4",
+    "@changesets/cli": "^2.27.7",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.0.0",
+    "@types/react": "^18.3.4",
+    "@vitest/coverage-istanbul": "^2.0.5",
+    "jsdom": "^24.1.1",
+    "tsup": "^8.2.4",
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
+  },
+  "scripts": {
+    "build": "tsup",
+    "ci": "npm run build && npm run check-exports && npm run lint && npm run test",
+    "lint": "tsc",
+    "test": "vitest run --coverage",
+    "check-exports": "attw --pack .",
+    "local-release": "npm run ci && changeset version && changeset publish"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17 || ^18 || ^19"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

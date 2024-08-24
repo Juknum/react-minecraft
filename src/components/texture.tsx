@@ -1,6 +1,6 @@
-import React, { isValidElement } from "react";
-import { useAnimation } from "../hooks/useAnimation.js"
+import React from "react";
 
+import { useAnimation } from "../hooks/useAnimation.js"
 import type { MCMeta } from "../types.js";
 
 export declare namespace Texture {
@@ -32,7 +32,7 @@ export declare namespace Texture {
 	export namespace Canvas {
 		interface props extends React.CanvasHTMLAttributes<HTMLCanvasElement> {
 			src: HTMLImageElement['src'];
-			mcmeta?: Texture.props['mcmeta'];
+			mcmeta: Texture.props['mcmeta'];
 		}
 	}
 
@@ -64,6 +64,7 @@ Texture.Background = ({ size, children, background, style, ...props }: Texture.B
 		backgroundSize: 'cover',
 		imageRendering: 'pixelated',
 
+		minHeight: size ?? '100%',
 		height: size ?? '100%',
 		width: size ?? '100%',
 
@@ -91,9 +92,7 @@ Texture.Image = ({ src, alt, style, ...props }: Texture.Image.props) => {
 }
 
 Texture.Canvas = ({ src, mcmeta, ...props }: Texture.Canvas.props) => {
-	const { canvasRef, isValid } = useAnimation({ src, mcmeta, isTiled: mcmeta?.tiled });
-	if (!isValid) return Texture.Image({ src });
-
+	const { canvasRef } = useAnimation({ src, mcmeta, isTiled: mcmeta?.tiled });
 	return (
 		<canvas 
 			ref={canvasRef}

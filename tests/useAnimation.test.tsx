@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { render, renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
@@ -15,11 +15,9 @@ describe('useAnimation', () => {
 			animation: {},
 		};
 
-		const { canvasRef, isValid } = renderHookUnpacker(renderHook(() => useAnimation({ src, mcmeta })));
+		const { canvasRef } = renderHookUnpacker(renderHook(() => useAnimation({ src, mcmeta })));
 
 		render(<canvas ref={canvasRef} />);
-
-		expect(isValid).toBe(true);
 		expect(canvasRef.current).toBeInstanceOf(HTMLCanvasElement);
 	});
 
@@ -27,11 +25,9 @@ describe('useAnimation', () => {
 		const src = `${url}/campfire_fire.png`;
 		const mcmeta = undefined;
 
-		const { canvasRef, isValid } = renderHookUnpacker(renderHook(() => useAnimation({ src, mcmeta })));
+		const { canvasRef } = renderHookUnpacker(renderHook(() => useAnimation({ src, mcmeta })));
 
 		render(<canvas ref={canvasRef} />);
-
-		expect(isValid).toBe(false);
 		expect(canvasRef.current).toBeInstanceOf(HTMLCanvasElement);
 	});
 });

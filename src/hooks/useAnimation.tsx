@@ -17,8 +17,14 @@ export declare namespace useAnimation {
 		 * Tells the hook to center the image in the canvas
 		 * Used for fluids and other textures when it needs to seamlessly rotates (in-game) 
 		 * without cutting off corners or extending beyond the texture's boundaries.
+		 * @default false
 		 */
 		isTiled?: boolean;
+		/**
+		 * Tells if the animation should play or not, if a number is provided, the animation will pause on that tick
+		 * @default false
+		 */
+		isPaused?: boolean | number;
 	}
 
 	interface output {
@@ -27,58 +33,142 @@ export declare namespace useAnimation {
 		 */
 		canvasRef: React.RefObject<HTMLCanvasElement>;
 		/**
-		 * A boolean indicating if the animation is valid and is displayed
+		 * Determined sprites from the MCMETA data
 		 */
-		isValid: boolean;
+		sprites: MCMeta.AnimationFrame[];
 	}
 }
 
 /**
  * A hook to animate a texture using the given MCMETA data
- * @author Even Torset &lt;https://github.com/EvenTorset&gt; for the original MCMETA to canvas code
- *
  * @returns A ref to the canvas element and a boolean indicating if the MCMETA data is valid
  */
-export function useAnimation({ src, mcmeta, isTiled }: useAnimation.params): useAnimation.output {
+export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.params): useAnimation.output {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const animationInterval = useRef<NodeJS.Timeout>();
+	const tickingRef = useRef<NodeJS.Timeout>();
 
-	const [isValid, setValid] = useState(false);
+	const [image, setImage] = useState<HTMLImageElement | null>(null);
+	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
+	const [sprites, setSprites] = useState<MCMeta.AnimationFrame[]>([]);
+	const [frames, setFrames] = useState<Record<number, [MCMeta.AnimationFrame, number][]>>({});
+	const [currentTick, setTick] = useState(1);
+
+	// Update the image when the src changes
 	useEffect(() => {
-		// Clear the previous interval if it exists
-		// >> avoid cumulative intervals when the component re-renders
-		if (animationInterval.current) {
-			clearInterval(animationInterval.current);
-			animationInterval.current = undefined;
+		setCanvas(canvasRef.current);
+
+		const img = new Image();
+		img.src = src;
+
+		img.onload = () => {
+			setImage(img);
+			tickingRef.current = setInterval(() => {}, 1000 / 20);
+		};
+
+		img.onerror = () => {
+			setImage(null);
+			if (tickingRef.current) {
+				clearInterval(tickingRef.current);
+				tickingRef.current = undefined;
+			}
 		}
 
-		// Short return if the mcmeta is not valid or not present
-		if (!mcmeta) return setValid(false);
+	}, [src]);
 
-		setValid(true);
+	// Update the frames when the image or mcmeta changes
+	useEffect(() => {
+		if (!image || !mcmeta) return;
+		const animation = mcmeta.animation ?? {};
 
-		const image = new Image();
-		image.src = src;
+		// convert all frames to an array of objects with index and time
+		const animationFrames: MCMeta.AnimationFrame[] = [];
 
-		const tick = Math.max(mcmeta?.animation?.frametime || 1, 1);
-		const frames: MCMeta.AnimationFrame[] = [];
+		if (animation.frames) {
+			for (const frame of animation.frames) {
+				switch (typeof frame) {
+					// already in the correct format
+					case 'object':
+						animationFrames.push({ index: frame.index, time: Math.max(frame.time, 1) });
+						break;
+					// map the frame to the correct format
+					case 'number':
+						animationFrames.push({ index: frame, time: animation.frametime ?? 1 });
+						break;
+				}
+			}
+		}
+		// no frames specified, so we assume the image is a sprite sheet
+		else {
+			const framesCount = isTiled ? (image.height / 2) / (image.width / 2) : image.height / image.width;
+			for (let fi = 0; fi < framesCount; fi++) {
+				animationFrames.push({ index: fi, time: animation.frametime ?? 1 });
+			}
+		}
 
-		let interval: number;
+		// determines what frames (including interpolated ones) to play on each tick
+		// => { tick: [frame, alpha][] } (where the first frame has always an alpha of 1 and the second one is interpolated)
+		const framesToPlay: Record<number, [MCMeta.AnimationFrame, number][]> = {};
 
-		const canvas = canvasRef.current;
-		if (!canvas) return;
+		let ticks = 1;
+		animationFrames.forEach((frame, index) => {
+			for (let t = 1; t <= frame.time; t++) {
+				framesToPlay[ticks] = [[frame, 1]];
+				
+				if (animation.interpolate) {
+					const nextFrame = animationFrames[index + 1] ?? animationFrames[0]!;
+					framesToPlay[ticks]!.push([nextFrame, t / nextFrame.time]);
+				}
 
-		const context = canvas.getContext('2d');
-		if (!context) return;
+				ticks++;
+			}
+		})
 
-		const draw = (frame = 0, ticks = 0) => {
-			const padding = isTiled ? image.width / 4 : 0;
-			const width = isTiled ? image.width / 2 : image.width;
+		setFrames(framesToPlay);
+		setSprites(animationFrames);
+	}, [image, isTiled, mcmeta]);
 
-			context.clearRect(0, 0, width, width);
-			context.globalAlpha = 1;
-			context.imageSmoothingEnabled = false;
+	// Main loop to play the animation
+	useEffect(() => {
+		if (Object.keys(frames).length === 0) return;
+
+		setTimeout(() => {
+			if (!isPaused && isPaused !== 0) {
+				let next = currentTick + 1;
+				if (frames[next] === undefined) next = 1;
+				setTick(next);
+			}
+			else {
+				const tickToPause = typeof isPaused === 'number' 
+					? ((isPaused - 1) % Object.keys(frames).length) + 1 // 1-indexed
+					: currentTick;
+				setTick(tickToPause);
+			}
+		}, 1000 / 20); // 20 ticks per second (50ms per tick)
+
+	}, [frames, currentTick, isPaused]);
+
+	useEffect(() => {
+		if (Object.keys(frames).length === 0) return;
+		const framesToDraw = frames[currentTick];
+
+		const context = canvas?.getContext('2d');
+		if (!canvas || !context || !image || !framesToDraw) return;
+
+		canvas.style.width = '100%';
+		canvas.width = canvas.offsetWidth;
+		canvas.height = canvas.offsetWidth;
+
+		const padding = isTiled ? image.width / 4 : 0;
+		const width = isTiled ? image.width / 2 : image.width;
+
+		context.clearRect(0, 0, width, width);
+		context.globalAlpha = 1;
+		context.imageSmoothingEnabled = false;
+
+		for (const frame of framesToDraw) {
+			const [data, alpha] = frame;
+			context.globalAlpha = alpha;
 
 			context.drawImage(
 				// source image
@@ -86,7 +176,7 @@ export function useAnimation({ src, mcmeta, isTiled }: useAnimation.params): use
 
 				// position on source image
 				// top left, top right
-				padding, padding + (width * frames[frame]?.index!) * (isTiled ? 2 : 1),
+				padding, padding + (width * data.index) * (isTiled ? 2 : 1),
 				// width, height of the source image
 				width, width,
 
@@ -96,91 +186,11 @@ export function useAnimation({ src, mcmeta, isTiled }: useAnimation.params): use
 				// width, height
 				canvas.width, canvas.width
 			);
+		}
+	}, [currentTick, canvas, image, canvasRef, frames]);
 
-			// Partially draw the next frame if interpolation is enabled
-			if (mcmeta?.animation?.interpolate) {
-				context.globalAlpha = ticks / (frames[frame]?.time ?? 1);
-				context.drawImage(
-					image,
-
-					padding, padding + (width * frames[(frame + 1) % frames.length]?.index!) * (isTiled ? 2 : 1),
-					width, width,
-
-					0, 0,
-					canvas.width, canvas.height
-				);
-			}
-		};
-
-		image.onload = () => {
-			if (mcmeta?.animation?.frames && mcmeta?.animation.frames.length > 0) {
-				interval =
-					mcmeta?.animation.interpolate ||
-						mcmeta?.animation.frames.find((e) => typeof e === 'object' && e.time % tick !== 0)
-						? 1
-						: tick;
-
-				for (let e = 0; e < mcmeta?.animation.frames.length; e++) {
-					const a = mcmeta?.animation.frames[e]!;
-
-					if (typeof a === 'object')
-						frames.push({
-							index: a.index,
-							time: Math.max(a.time, 1) / interval,
-						});
-					else
-						frames.push({
-							index: a,
-							time: tick / interval,
-						});
-				}
-			} else {
-				interval = mcmeta?.animation?.interpolate ? 1 : tick;
-				const framesCount = isTiled 
-					? (image.height / 2) / (image.width / 2)
-					: image.height / image.width;
-
-				for (let fi = 0; fi < framesCount; fi++) {
-					frames.push({ index: fi, time: tick / interval });
-				}
-			}
-
-			let ticks = 0;
-			let currentFrame = 0;
-
-			const update = () => {
-				ticks++;
-
-				// update canvas size each frame to match the container size
-				// >> this is required if the canvas is first hidden and then shown
-				canvas.style.width = '100%';
-				canvas.width = canvas.offsetWidth;
-				canvas.height = canvas.offsetWidth;
-
-				if (frames[currentFrame]!.time <= ticks) {
-					ticks = 0;
-					currentFrame++;
-					if (currentFrame >= frames.length) currentFrame = 0;
-					draw(currentFrame);
-				} else if (mcmeta?.animation?.interpolate) draw(currentFrame, ticks);
-			};
-
-			if (!animationInterval.current) {
-				update(); // initial draw before starting interval
-				animationInterval.current = setInterval(update, interval * 60);
-			}
-		};
-
-		image.onerror = () => {
-			canvas.remove();
-			setValid(false);
-		};
-
-	}, [
-		src,
-		mcmeta,
-		isValid, // re-run if the mcmeta validity changes
-	]);
-
-	return { canvasRef, isValid };
+	return { 
+		canvasRef,
+		sprites,
+	};
 }

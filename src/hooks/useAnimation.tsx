@@ -32,6 +32,10 @@ export declare namespace useAnimation {
 		 * A reference to the canvas element used for the animation
 		 */
 		canvasRef: React.RefObject<HTMLCanvasElement>;
+		/**
+		 * Determined sprites from the MCMETA data
+		 */
+		sprites: MCMeta.AnimationFrame[];
 	}
 }
 
@@ -46,6 +50,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 	const [image, setImage] = useState<HTMLImageElement | null>(null);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
+	const [sprites, setSprites] = useState<MCMeta.AnimationFrame[]>([]);
 	const [frames, setFrames] = useState<Record<number, [MCMeta.AnimationFrame, number][]>>({});
 	const [currentTick, setTick] = useState(1);
 
@@ -120,6 +125,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 		})
 
 		setFrames(framesToPlay);
+		setSprites(animationFrames);
 	}, [image, isTiled, mcmeta]);
 
 	// Main loop to play the animation
@@ -183,5 +189,8 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 		}
 	}, [currentTick, canvas, image, canvasRef, frames]);
 
-	return { canvasRef };
+	return { 
+		canvasRef,
+		sprites,
+	};
 }

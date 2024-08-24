@@ -17,12 +17,14 @@ export declare namespace useAnimation {
 		 * Tells the hook to center the image in the canvas
 		 * Used for fluids and other textures when it needs to seamlessly rotates (in-game) 
 		 * without cutting off corners or extending beyond the texture's boundaries.
+		 * @default false
 		 */
 		isTiled?: boolean;
 		/**
-		 * Tells if the animation should play or not
+		 * Tells if the animation should play or not, if a number is provided, the animation will pause on that tick
+		 * @default false
 		 */
-		isPaused?: boolean;
+		isPaused?: boolean | number;
 	}
 
 	interface output {
@@ -123,12 +125,19 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 	// Main loop to play the animation
 	useEffect(() => {
 		if (Object.keys(frames).length === 0) return;
-		if (isPaused) return;
 
 		setTimeout(() => {
-			let next = currentTick + 1;
-			if (frames[next] === undefined) next = 1;
-			setTick(next);
+			if (!isPaused && isPaused !== 0) {
+				let next = currentTick + 1;
+				if (frames[next] === undefined) next = 1;
+				setTick(next);
+			}
+			else {
+				const tickToPause = typeof isPaused === 'number' 
+					? ((isPaused - 1) % Object.keys(frames).length) + 1 // 1-indexed
+					: currentTick;
+				setTick(tickToPause);
+			}
 		}, 1000 / 20); // 20 ticks per second (50ms per tick)
 
 	}, [frames, currentTick, isPaused]);

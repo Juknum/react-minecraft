@@ -1,4 +1,3 @@
-
 export declare namespace MCMeta {
 	/**
 	 * @see https://minecraft.wiki/w/Resource_pack#Animation
@@ -42,4 +41,40 @@ export declare namespace MCMeta {
 		 */
 		time: number;
 	}
+
+	interface Texture {
+		blur?: boolean;
+		clamp?: boolean;
+		mipmaps?: number[];
+	}
+
+	interface GUI {
+		scaling?: {
+			type?: 'stretch' | 'tile' | 'nine_slice';
+			width?: number;
+			height?: number;
+			border?: number | GUIPosition;
+		}
+	}
+
+	interface GUIPosition {
+		left?: number;
+		top?: number;
+		right?: number;
+		bottom?: number;
+	}
+
+	interface Villager {
+		hat?: 'full' | 'partial';
+	}
+}
+
+/**
+ * Everything that can be stored in a `.png.mcmeta` file
+ */
+export interface TextureMCMeta {
+	animation?: MCMeta.Animation;
+	texture?: MCMeta.Texture;
+	gui?: MCMeta.GUI;
+	villager?: MCMeta.Villager;
 }

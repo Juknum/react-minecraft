@@ -1,4 +1,4 @@
-import { Vector3 } from "three";
+import { Vector2, Vector3 } from "three";
 import type { JSONModel } from "./types.js";
 
 /**
@@ -13,33 +13,58 @@ export function midPoint(a: unknown, b: unknown): Vector3 {
 	return new Vector3();
 }
 
-/**
- * Calculate the height (Y axis) between two points
- */
-export function height(a: JSONModel.xyz, b: JSONModel.xyz): number;
-export function height(a: Vector3, b: Vector3): number;
-export function height(a: unknown, b: unknown): number {
-	if (Array.isArray(a) && Array.isArray(b)) return Math.abs(a[1] - b[1]);
-	if (a instanceof Vector3 && b instanceof Vector3) return Math.abs(a.y - b.y);
+const MC_MIN = -16;
+const MC_MAX =  32; 
+const THREE_MIN = -1.5;
+const THREE_MAX =  1.5;
 
-	return -1;
+export const clampValue = (value: number, old_min = MC_MIN, old_max = MC_MAX, min = THREE_MIN, max = THREE_MAX) => {
+	const normalized = (value - old_min) / (old_max - old_min);
+	return normalized * (max - min) + min;
 }
 
 /**
- * Clamp Minecraft coordinates (from -16 to 32) to a -1 to 1 range for Three.js
+ * Clamp coordinates [-16, 32] to [-1.5, 1.5] range for Three.js
+ * This adjusts the position of the block to be centered in the middle of the block instead of the corner
  */
-export function clamp(v: JSONModel.xyz): Vector3;
-export function clamp(v: Vector3): Vector3;
-export function clamp(v: unknown): Vector3 {
-	if (Array.isArray(v)) return new Vector3(v[0] / 16 - 1, v[1] / 16 - 1, v[2] / 16 - 1);
-	if (v instanceof Vector3) return new Vector3(v.x / 16 - 1, v.y / 16 - 1, v.z / 16 - 1);
+export function clampAndAdjust(v: JSONModel.xyz): Vector3;
+export function clampAndAdjust(v: Vector3): Vector3;
+export function clampAndAdjust(v: unknown): Vector3 {
+	let output = new Vector3(0, 0, 0);
+	if (Array.isArray(v)) output = new Vector3(clampValue(v[0]), clampValue(v[1]), clampValue(v[2]));
+	if (v instanceof Vector3) output = new Vector3(clampValue(v.x), clampValue(v.y), clampValue(v.z));
 
-	return new Vector3();
+	return output.add(new Vector3(0, 0.5, 0));
+}
+
+export function clampAndAdjust2D(v: [number, number]): Vector2;
+export function clampAndAdjust2D(v: Vector2): Vector2;
+export function clampAndAdjust2D(v: unknown): Vector2 {
+	let output = new Vector2(0, 0);
+	if (Array.isArray(v)) output = new Vector2(clampValue(v[0]), clampValue(v[1]));
+	if (v instanceof Vector2) output = new Vector2(clampValue(v.x), clampValue(v.y));
+
+	return output.add(new Vector2(0.5, 0.5));
 }
 
 /**
- * Get width/height/depth of the volume defined by two points
+ * Get the distance between two points
  */
-export function getGeometry(from: JSONModel.xyz, to: JSONModel.xyz): JSONModel.xyz {
-	return [Math.abs(from[0] - to[0]), Math.abs(from[1] - to[1]), Math.abs(from[2] - to[2])];
+export function length(a: JSONModel.xyz, b: JSONModel.xyz): number;
+export function length(a: Vector3, b: Vector3): number;
+export function length(a: unknown, b: unknown): number {
+	if (Array.isArray(a) && Array.isArray(b)) return Math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2);
+	if (a instanceof Vector3 && b instanceof Vector3) return a.distanceTo(b);
+
+	return 0;
 }
+
+export function normalizedLength(a: JSONModel.xyz, b: JSONModel.xyz): number;
+export function normalizedLength(a: Vector3, b: Vector3): number;
+export function normalizedLength(a: any, b: any): number {
+	return clampValue(length(a, b));
+}
+
+export const COLORS = [
+	'red', 'blue', 'green', 'yellow', 'purple', 'black', 'orange', 'pink'
+] as const;

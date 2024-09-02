@@ -97,7 +97,19 @@ export declare namespace JSONModel {
 		;
 
 	type xyz = [number, number, number];
+	type x1y1x2y2 = [number, number, number, number];
+
 	type face = 'north' | 'south' | 'east' | 'west' | 'up' | 'down';
+
+	type Faces = {
+		[key in face]?: {
+			uv: x1y1x2y2;
+			texture: `#${keyof Required<Block>['textures']}`;
+			cullface?: face;
+			rotation?: 0 | 90 | 180 | 270;
+			tintindex?: -1 | 0 | 1;
+		};
+	}
 
 	interface Block {
 		parent?: 'builtin/generated' | namespaced;
@@ -110,7 +122,7 @@ export declare namespace JSONModel {
 			};
 		};
 		textures?: {
-			[key in string | 'particules']?: namespaced;
+			[key in string | 'particules']: namespaced;
 		};
 		elements?: {
 			from: xyz;
@@ -122,15 +134,7 @@ export declare namespace JSONModel {
 				rescale?: boolean;
 			};
 			shade?: boolean;
-			faces: {
-				[key in face]?: {
-					uv?: [number, number, number, number];
-					texture: `#${keyof Required<Block>['textures']}`;
-					cullface?: face;
-					rotation?: 0 | 90 | 180 | 270;
-					tintindex?: -1 | 0 | 1;
-				};
-			};
+			faces: Faces;
 		}[]
 	}
 

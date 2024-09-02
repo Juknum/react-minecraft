@@ -59,6 +59,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 		setCanvas(canvasRef.current);
 
 		const img = new Image();
+		img.setAttribute('crossorigin', 'anonymous');
 		img.src = src;
 
 		img.onload = () => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { useAnimation } from "../hooks/useAnimation.js"
 import type { MCMeta } from "../types.js";
@@ -96,6 +96,10 @@ export declare namespace Texture {
 			 * @default false
 			 */
 			isTiled?: boolean;
+			/**
+			 * The ref to the canvas element
+			 */
+			onCanvasRefUpdate?: (ref: React.RefObject<HTMLCanvasElement>) => void;
 		}
 	}
 
@@ -164,8 +168,13 @@ Texture.Image = ({ src, alt, style, ...props }: Texture.Image.props) => {
 	return <img src={src} alt={alt} style={_style} {...props} />;
 }
 
-Texture.Canvas = ({ src, mcmeta, isPaused, isTiled, ...props }: Texture.Canvas.props) => {
+Texture.Canvas = ({ src, mcmeta, isPaused, isTiled, onCanvasRefUpdate, ...props }: Texture.Canvas.props) => {
 	const { canvasRef } = useAnimation({ src, mcmeta, isPaused, isTiled });
+
+	useEffect(() => {
+		onCanvasRefUpdate?.(canvasRef);
+	}, [canvasRef]);
+
 	return (
 		<canvas 
 			ref={canvasRef}

@@ -78,3 +78,97 @@ export interface TextureMCMeta {
 	gui?: MCMeta.GUI;
 	villager?: MCMeta.Villager;
 }
+
+export declare namespace JSONModel {
+	type namespaced = 
+		| `${string}:${'block' | 'item'}/${string}` 
+		| `${'block' | 'item'}/${string}`
+		;
+
+	type position = 
+		| 'thirdperson_righthand' 
+		| 'thirdperson_lefthand' 
+		| 'firstperson_righthand' 
+		| 'firstperson_lefthand' 
+		| 'gui' 
+		| 'head' 
+		| 'ground' 
+		| 'fixed'
+		;
+
+	type xyz = [number, number, number];
+	type face = 'north' | 'south' | 'east' | 'west' | 'up' | 'down';
+
+	interface Block {
+		parent?: 'builtin/generated' | namespaced;
+		ambientocclusion?: boolean;
+		display?: {
+			[key in position]?: {
+				rotation?: xyz;
+				translation?: xyz;
+				scale?: xyz;
+			};
+		};
+		textures?: {
+			[key in string | 'particules']?: namespaced;
+		};
+		elements?: {
+			from: xyz;
+			to: xyz;
+			rotation?: {
+				origin: xyz;
+				axis: 'x' | 'y' | 'z';
+				angle: number;
+				rescale?: boolean;
+			};
+			shade?: boolean;
+			faces: {
+				[key in face]?: {
+					uv?: [number, number, number, number];
+					texture: `#${keyof Required<Block>['textures']}`;
+					cullface?: face;
+					rotation?: 0 | 90 | 180 | 270;
+					tintindex?: -1 | 0 | 1;
+				};
+			};
+		}[]
+	}
+
+	type predicate = 
+		| 'angle'
+		| 'blocking'
+		| 'broken'
+		| 'cast'
+		| 'cooldown'
+		| 'damage'
+		| 'damaged'
+		| 'lefthanded'
+		| 'pull'
+		| 'pulling'
+		| 'charged'
+		| 'firework'
+		| 'throwing'
+		| 'time'
+		| 'custom_model_data'
+		| 'level'
+		| 'filled'
+		| 'tooting'
+		| 'trim_type'
+		| 'brushing'
+		| 'honey_level'
+		;
+
+	interface Item extends Omit<Block, 'ambientocclusion' | 'textures' | 'parent'> {
+		parent?: 'item/generated' | 'builtin/entity'  | namespaced;
+		textures?: {
+			[key in string | `layer${number}` | 'particules']?: namespaced;
+		};
+		gui_light?: 'front' | 'side';
+		overrides?: {
+			predicate: {
+				[key in predicate]?: number;
+			};
+			model: namespaced;
+		}[];
+	}
+}

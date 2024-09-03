@@ -1,0 +1,13 @@
+{
+	"cSpell.words": [
+		"drei",
+		"Mantine",
+		"tseslint"
+	],
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
+}

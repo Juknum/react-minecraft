@@ -1,57 +1,54 @@
 import { useEffect, useRef, useState } from 'react';
+import type { Animation, AnimationFrame } from '../types/mcmeta.js';
 
-import type { MCMeta } from '../types.js';
+interface params {
+	/**
+	 * The URL of the image to animate
+	 */
+	src: HTMLImageElement['src'];
+	/**
+	 * The MCMETA data to use for the animation
+	 * @see https://minecraft.wiki/w/Resource_pack#Animation
+	 */
+	mcmeta?: { animation?: Animation };
+	/**
+	 * Tells the hook to center the image in the canvas
+	 * Used for fluids and other textures when it needs to seamlessly rotates (in-game) 
+	 * without cutting off corners or extending beyond the texture's boundaries.
+	 * @default false
+	 */
+	isTiled?: boolean;
+	/**
+	 * Tells if the animation should play or not, if a number is provided, the animation will pause on that tick
+	 * @default false
+	 */
+	isPaused?: boolean | number;
+}
 
-export declare namespace useAnimation {
-	interface params {
-		/**
-		 * The URL of the image to animate
-		 */
-		src: HTMLImageElement['src'];
-		/**
-		 * The MCMETA data to use for the animation
-		 * @see https://minecraft.wiki/w/Resource_pack#Animation
-		 */
-		mcmeta?: { animation?: MCMeta.Animation };
-		/**
-		 * Tells the hook to center the image in the canvas
-		 * Used for fluids and other textures when it needs to seamlessly rotates (in-game) 
-		 * without cutting off corners or extending beyond the texture's boundaries.
-		 * @default false
-		 */
-		isTiled?: boolean;
-		/**
-		 * Tells if the animation should play or not, if a number is provided, the animation will pause on that tick
-		 * @default false
-		 */
-		isPaused?: boolean | number;
-	}
-
-	interface output {
-		/**
-		 * A reference to the canvas element used for the animation
-		 */
-		canvasRef: React.RefObject<HTMLCanvasElement>;
-		/**
-		 * Determined sprites from the MCMETA data
-		 */
-		sprites: MCMeta.AnimationFrame[];
-	}
+interface output {
+	/**
+	 * A reference to the canvas element used for the animation
+	 */
+	canvasRef: React.RefObject<HTMLCanvasElement>;
+	/**
+	 * Determined sprites from the MCMETA data
+	 */
+	sprites: AnimationFrame[];
 }
 
 /**
  * A hook to animate a texture using the given MCMETA data
  * @returns A ref to the canvas element and a boolean indicating if the MCMETA data is valid
  */
-export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.params): useAnimation.output {
+export function useAnimation({ src, mcmeta, isTiled, isPaused }: params): output {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const tickingRef = useRef<NodeJS.Timeout>();
 
 	const [image, setImage] = useState<HTMLImageElement | null>(null);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
 
-	const [sprites, setSprites] = useState<MCMeta.AnimationFrame[]>([]);
-	const [frames, setFrames] = useState<Record<number, [MCMeta.AnimationFrame, number][]>>({});
+	const [sprites, setSprites] = useState<AnimationFrame[]>([]);
+	const [frames, setFrames] = useState<Record<number, [AnimationFrame, number][]>>({});
 	const [currentTick, setTick] = useState(1);
 
 	// Update the image when the src changes
@@ -64,7 +61,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 
 		img.onload = () => {
 			setImage(img);
-			tickingRef.current = setInterval(() => {}, 1000 / 20);
+			tickingRef.current = setInterval(() => { void 0; }, 1000 / 20);
 		};
 
 		img.onerror = () => {
@@ -73,7 +70,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 				clearInterval(tickingRef.current);
 				tickingRef.current = undefined;
 			}
-		}
+		};
 
 	}, [src]);
 
@@ -83,7 +80,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 		const animation = mcmeta.animation ?? {};
 
 		// convert all frames to an array of objects with index and time
-		const animationFrames: MCMeta.AnimationFrame[] = [];
+		const animationFrames: AnimationFrame[] = [];
 
 		if (animation.frames) {
 			for (const frame of animation.frames) {
@@ -109,7 +106,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 
 		// determines what frames (including interpolated ones) to play on each tick
 		// => { tick: [frame, alpha][] } (where the first frame has always an alpha of 1 and the second one is interpolated)
-		const framesToPlay: Record<number, [MCMeta.AnimationFrame, number][]> = {};
+		const framesToPlay: Record<number, [AnimationFrame, number][]> = {};
 
 		let ticks = 1;
 		animationFrames.forEach((frame, index) => {
@@ -117,13 +114,14 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: useAnimation.pa
 				framesToPlay[ticks] = [[frame, 1]];
 				
 				if (animation.interpolate) {
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					const nextFrame = animationFrames[index + 1] ?? animationFrames[0]!;
-					framesToPlay[ticks]!.push([nextFrame, t / nextFrame.time]);
+					framesToPlay[ticks]?.push([nextFrame, t / nextFrame.time]);
 				}
 
 				ticks++;
 			}
-		})
+		});
 
 		setFrames(framesToPlay);
 		setSprites(animationFrames);

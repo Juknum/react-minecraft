@@ -1,5 +1,4 @@
-import { Group, Stack } from "@mantine/core";
-import type { ReactNode } from "react";
+import type { ReactNode } from 'react';
 
 interface props {
 	children: ReactNode;
@@ -39,5 +38,5 @@ export function Content({ children, tableOfContent }: props) {
 				{tableOfContent}
 			</div>
 		</div>
-	)
+	);
 }

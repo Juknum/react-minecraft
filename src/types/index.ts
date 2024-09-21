@@ -1,2 +1,2 @@
-export * from './mcmeta.js';
-export * from './model.js';
+export type * from './mcmeta.js';
+export type * from './model.js';

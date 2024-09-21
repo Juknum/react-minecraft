@@ -1,10 +1,13 @@
 'use client';
 
-import { Stack, Group, Card, Title, ScrollArea, Button } from "@mantine/core";
-import { Navbar } from "./navbar";
-import { type ReactNode } from "react";
-import { GithubIcon } from "@mantinex/dev-icons";
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
+
+import type { ReactNode } from 'react';
+
+import { Stack, Group, Card, Title, ScrollArea, Button } from '@mantine/core';
+import { GithubIcon } from '@mantinex/dev-icons';
+
+import { Navbar } from './navbar';
 
 interface props {
 	children: ReactNode;
@@ -58,5 +61,5 @@ export function Container({ children }: props) {
 				</Stack>
 			</Group>
 		</Stack>
-	)
+	);
 }

@@ -1,4 +1,5 @@
-import React, { type CSSProperties, type HTMLAttributes, type ReactNode } from 'react';
+import React from 'react';
+import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 
 export interface TextureBackgroundProps {
 	/**

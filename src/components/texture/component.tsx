@@ -1,8 +1,12 @@
 import type { CanvasHTMLAttributes, ImgHTMLAttributes } from 'react';
-import { TextureBackground, type TextureBackgroundProps } from './background.js';
-import { TextureCanvas, type TextureCanvasProps } from './canvas.js';
-import { TextureImage } from './image.js';
 import React from 'react';
+
+import { TextureBackground } from './background.js';
+import { TextureCanvas } from './canvas.js';
+import { TextureImage } from './image.js';
+
+import type { TextureBackgroundProps } from './background.js';
+import type { TextureCanvasProps } from './canvas.js';
 
 interface TextureProps extends Omit<TextureBackgroundProps, 'children'>, Omit<ImgHTMLAttributes<HTMLImageElement>, 'src'> {
 	animation?: Omit<TextureCanvasProps, 'src'>;

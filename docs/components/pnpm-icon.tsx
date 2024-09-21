@@ -44,13 +44,13 @@ export function PnpmIcon({ size }: { size: string }) {
 				/>
 			</defs>
 			<g xmlns="http://www.w3.org/2000/svg">
-				<g><use href="#arNRoK435"  opacity="1" fill="#f9ad00" /></g>
-				<g><use href="#a3H2WU7Px"  opacity="1" fill="#f9ad00" /></g>
+				<g><use href="#arNRoK435" opacity="1" fill="#f9ad00" /></g>
+				<g><use href="#a3H2WU7Px" opacity="1" fill="#f9ad00" /></g>
 				<g><use href="#b1DInM56vl" opacity="1" fill="#f9ad00" /></g>
 				<g><use href="#a7LFlgQIwu" opacity="1" fill="#f9ad00" /></g>
-				<g><use href="#amwLiZcuo"  opacity="1" fill="#4e4e4e" /></g>
+				<g><use href="#amwLiZcuo" opacity="1" fill="#4e4e4e" /></g>
 				<g><use href="#f3Peu5RWan" opacity="1" fill="#4e4e4e" /></g>
-				<g><use href="#a6DXBfqPa"  opacity="1" fill="#4e4e4e" /></g>
+				<g><use href="#a6DXBfqPa" opacity="1" fill="#4e4e4e" /></g>
 				<g><use href="#c1GWSTH1z7" opacity="1" fill="#4e4e4e" /></g>
 			</g>
 		</svg>

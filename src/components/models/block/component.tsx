@@ -1,10 +1,17 @@
-import type { BlockModelType } from '../../../types/model.js';
-import { ThreeContainer, type ThreeContainerProps } from '../three.js';
-import React, { useState, type RefObject } from 'react';
-import { error } from '../../../utils/error.js';
-import { TextureCanvas, type TextureCanvasProps } from '../../texture/canvas.js';
-import { Element } from '../element.js';
+import React, { useState } from 'react';
+import type { RefObject } from 'react';
+
 import { Vector3 } from 'three';
+
+import { Element } from '../element.js';
+import { ThreeContainer } from '../three.js';
+
+import type { ThreeContainerProps } from '../three.js';
+import type { TextureCanvasProps } from '~/components/texture/canvas.js';
+import type { BlockModelType } from '~/types/model.js';
+
+import { TextureCanvas } from '~/components/texture/canvas.js';
+import { error } from '~/utils/error.js';
 
 interface BlockModelProps extends Omit<ThreeContainerProps, 'children'>, ThreeContainerProps {
 	model: Required<Pick<BlockModelType, 'elements' | 'textures'>>;

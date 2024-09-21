@@ -1,7 +1,10 @@
+import React from 'react';
+
 import { OrbitControls } from '@react-three/drei';
 import { Canvas } from '@react-three/fiber';
-import React from 'react';
-import { PerspectiveCamera, type ColorRepresentation } from 'three';
+import { PerspectiveCamera } from 'three';
+
+import type { ColorRepresentation } from 'three';
 
 export interface ThreeContainerProps {
 	/**

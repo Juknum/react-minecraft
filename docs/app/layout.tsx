@@ -1,5 +1,6 @@
 
 import { createTheme, MantineProvider } from '@mantine/core';
+
 import { Container } from '../components/container';
 
 import '@mantine/core/styles.css';
@@ -11,17 +12,15 @@ export const metadata = {
 	title: 'react-minecraft documentation',
 };
 
-namespace RootLayout {
-  export interface props {
-    children: React.ReactNode
-  }
+export interface props {
+	children: React.ReactNode
 }
 
 const theme = createTheme({
 	cursorType: 'pointer',
 });
 
-export default function RootLayout({ children }: RootLayout.props) {
+export default function RootLayout({ children }: props) {
 
 	return (
 		<html lang="en">

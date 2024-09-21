@@ -1,22 +1,31 @@
 'use client';
 
-import { Title, Text, Code, Stack, Group, Button } from "@mantine/core";
-import { Content } from "../components/content";
-import { CodeHighlightTabs } from "@mantine/code-highlight";
+import { useRouter } from 'next/navigation';
 
+import { useMemo } from 'react';
+
+import { IoChevronForward } from 'react-icons/io5';
+
+import { CodeHighlightTabs } from '@mantine/code-highlight';
+import { Title, Text, Code, Stack, Group, Button } from '@mantine/core';
 import { NpmIcon, YarnIcon } from '@mantinex/dev-icons';
-import { PnpmIcon } from "../components/pnpm-icon";
-import { sanitizeCodeBlock, sanitizeJSON } from "../utils/sanitize";
-import { ReactIcon } from "../components/react-icon";
-
 import { Texture } from 'react-minecraft';
 
-import { IoChevronForward } from "react-icons/io5";
-import { useRouter } from "next/navigation";
+import { Content } from '~/docs/components/content';
+import { PnpmIcon } from '~/docs/components/pnpm-icon';
+import { ReactIcon } from '~/docs/components/react-icon';
+import mcmeta from '~/docs/public/textures/fire_1.png.mcmeta' ;
+import { sanitizeJSON } from '~/docs/utils/json';
 
-import mcmeta from '../public/textures/fire_1.png.mcmeta' ;
+export default function GettingStartedPage() {
+	const npmIcn = <NpmIcon size="16" />;
+	const yrnIcn = <YarnIcon size="16" />;
+	const pnpIcn = <PnpmIcon size="16" />;
+	const tsxIcn = <ReactIcon size="16" />;
 
-const basicExample = `
+	const router = useRouter();
+
+	const ex = useMemo(() => `
 import { Texture, type Animation } from 'react-minecraft';
 
 export function App() {
@@ -26,21 +35,11 @@ export function App() {
 		<Texture 
 			src="./public/textures/fire_1.png"
 			size="150px"
-			animation={{
-				mcmeta
-			}}
+			animation={{mcmeta}}
 		/>
 	);
 }
-`;
-
-export default function GettingStartedPage() {
-	const npmIcn = <NpmIcon size="16" />;
-	const yrnIcn = <YarnIcon size="16" />;
-	const pnpIcn = <PnpmIcon size="16" />;
-	const tsxIcn = <ReactIcon size="16" />;
-
-	const router = useRouter();
+`, []);
 
 	return (
 		<Content>
@@ -52,9 +51,9 @@ export default function GettingStartedPage() {
 
 				<CodeHighlightTabs 
 					code={[
-						{ icon: npmIcn, fileName: 'npm', code: `npm install react-minecraft`, language: 'bash' },
+						{ icon: npmIcn, fileName: 'npm', code: 'npm install react-minecraft', language: 'bash' },
 						{ icon: yrnIcn, fileName: 'yarn', code: 'yarn add react-minecraft', language: 'bash' },
-						{ icon: pnpIcn, fileName: 'pnpm', code: 'pnpm add react-minecraft', language: "bash" },
+						{ icon: pnpIcn, fileName: 'pnpm', code: 'pnpm add react-minecraft', language: 'bash' },
 					]} 
 				/>
 
@@ -64,7 +63,7 @@ export default function GettingStartedPage() {
 
 				<CodeHighlightTabs 
 					code={[
-						{ icon: tsxIcn, fileName: 'App.tsx', code: sanitizeCodeBlock(basicExample), language: 'tsx' },
+						{ icon: tsxIcn, fileName: 'App.tsx', code: ex, language: 'tsx' },
 					]} 
 				/>
 
@@ -77,7 +76,7 @@ export default function GettingStartedPage() {
 						<Texture
 							src="./textures/fire_1.png"
 							size="150px"
-							animation={{ mcmeta }}
+							animation={{mcmeta}}
 						/>
 						<Text c="dimmed">fire_1</Text>
 					</Stack>

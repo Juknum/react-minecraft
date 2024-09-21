@@ -1,9 +1,13 @@
-import { useFrame } from '@react-three/fiber';
 import { useEffect, useMemo, useRef } from 'react';
-import { CanvasTexture, Euler, Mesh, MeshBasicMaterial, PlaneGeometry, Texture, Vector2, Vector3, type Vector4 } from 'three';
-import { midPoint } from '../../utils/three.js';
 import React from 'react';
-import type { face } from '../../types/model.js';
+
+import { useFrame } from '@react-three/fiber';
+import { CanvasTexture, Euler, Mesh, MeshBasicMaterial, PlaneGeometry, Texture, Vector2, Vector3 } from 'three';
+
+import type { Vector4 } from 'three';
+import type { face } from '~/types/model.js';
+
+import { midPoint } from '~/utils/three.js';
 
 export interface FaceProps {
 	canvasRef: React.RefObject<HTMLCanvasElement>;

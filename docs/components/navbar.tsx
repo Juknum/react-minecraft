@@ -1,8 +1,10 @@
 'use client';
 
-import { Button, Code, NavLink, Stack } from "@mantine/core";
-import { useRouter } from "next/navigation";
-import { IoChevronForward } from "react-icons/io5";
+import { useRouter } from 'next/navigation';
+
+import { IoChevronForward } from 'react-icons/io5';
+
+import { Button, Code, NavLink, Stack } from '@mantine/core';
 
 export function Navbar() {
 	const router = useRouter();
@@ -23,7 +25,7 @@ export function Navbar() {
 				{ href: '/useAnimation', title: 'useAnimation' },
 			]
 		},
-	]
+	];
 
 	return (
 		<Stack p="xs" gap="xl">

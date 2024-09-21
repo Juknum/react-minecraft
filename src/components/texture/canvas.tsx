@@ -1,6 +1,9 @@
-import React, { useEffect, type CanvasHTMLAttributes } from 'react';
-import { useAnimation } from '../../hooks/useAnimation.js';
-import type { Animation } from '../../types/mcmeta.js';
+import React, { useEffect } from 'react';
+import type { CanvasHTMLAttributes } from 'react';
+
+import type { Animation } from '~/types/mcmeta.js';
+
+import { useAnimation } from '~/hooks/useAnimation.js';
 
 export interface TextureCanvasProps {
 	/**

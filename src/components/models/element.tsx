@@ -1,9 +1,15 @@
 
-import React, { useMemo, type RefObject } from 'react';
+import React, { useMemo } from 'react';
+import type { RefObject } from 'react';
+
 import { Vector3, Vector4 } from 'three';
-import { midPoint } from '../../utils/three.js';
-import { Face, type FaceProps } from './face.js';
-import type { face, Faces } from '../../types/model.js';
+
+import { Face } from './face.js';
+
+import type { FaceProps } from './face.js';
+import type { face, Faces } from '~/types/model.js';
+
+import { midPoint } from '~/utils/three.js';
 
 interface props {
 	from: Vector3;

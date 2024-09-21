@@ -1,4 +1,9 @@
-import { Stack, Title, Text } from "@mantine/core";
+import { Stack, Title, Text } from '@mantine/core';
+
+interface props {
+	title: string;
+	description: string;
+}
 
 export function Header({ title, description }: props) {
 	return (

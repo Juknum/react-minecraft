@@ -41,3 +41,27 @@ body {
 .mantine-CodeHighlightTabs-file[data-active=true] {
 	background-color: var(--mantine-color-dark-6) !important;
 }
+
+.hljs-keyword {
+	color: #ff7b72 !important;
+}
+
+.hljs-title.class_ {
+	color: #e6edf3 !important;
+}
+
+.hljs-title.function_ {
+	color: #d2a8ff !important;
+}
+
+.hljs-string {
+	color: #b1dcff !important;
+}
+
+.hljs-name {
+	color: #7ee787 !important;
+}
+
+.hljs-attr {
+	color: #54aefd !important;
+}

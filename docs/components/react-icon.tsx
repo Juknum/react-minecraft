@@ -1,13 +1,13 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from 'react';
 
 export function ReactIcon({ size }: { size: string }) {
 	const st1: CSSProperties = {
-		fill: "#00d8ff"
+		fill: '#00d8ff'
 	};
 
 	const st2: CSSProperties = {
-		fill: "none",
-		stroke: "#00d8ff",
+		fill: 'none',
+		stroke: '#00d8ff',
 		strokeWidth: 144.7456,
 		strokeMiterlimit: 10
 	};

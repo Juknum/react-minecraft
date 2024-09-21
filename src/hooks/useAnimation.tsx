@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import type { Animation, AnimationFrame } from '../types/mcmeta.js';
+
+import type { Animation, AnimationFrame } from '~/types/mcmeta.js';
 
 interface params {
 	/**
@@ -193,3 +194,9 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: params): output
 		sprites,
 	};
 }
+
+useAnimation.defaultProps = {
+	mcmeta: { animation: {} },
+	isTiled: false,
+	isPaused: false,
+};

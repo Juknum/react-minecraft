@@ -43,7 +43,7 @@ interface output {
  */
 export function useAnimation({ src, mcmeta, isTiled, isPaused }: params): output {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const tickingRef = useRef<NodeJS.Timeout>();
+	const tickingRef = useRef<ReturnType<typeof setTimeout>>();
 
 	const [image, setImage] = useState<HTMLImageElement | null>(null);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);

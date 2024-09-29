@@ -1,0 +1,69 @@
+*, :after, :before {
+	box-sizing: border-box;
+}
+
+body {
+	--docs-header-height: calc(3.75rem * var(--mantine-scale));
+	--docs-navbar-width: calc(16.25rem * var(--mantine-scale));
+	--docs-table-of-contents-width: calc(16.25rem * var(--mantine-scale));
+	--docs-content-width: calc(51.25rem * var(--mantine-scale));
+}
+
+.code-link {
+	cursor: pointer;
+}
+
+.code-link:hover {
+	color: #fff;
+}
+
+.output-framed {
+	max-width: 150px;
+	height: 150px;
+	border: 1px solid #333;
+}
+
+.mantine-CodeHighlightTabs-root {
+	border: calc(.0625rem* var(--mantine-scale)) solid !important;
+	border-radius: calc(.25rem* var(--mantine-scale)) !important;
+	border-color: var(--mantine-color-dark-4) !important;
+}
+
+.mantine-CodeHighlightTabs-file {
+	font-size: var(--mantine-font-size-sm) !important;
+	gap: calc(.4375rem* var(--mantine-scale)) !important;
+	padding: calc(.4375rem* var(--mantine-scale)) calc(.75rem* var(--mantine-scale)) !important;
+	font-family: var(--mantine-font-family-monospace) !important;
+	border: calc(.0625rem* var(--mantine-scale)) solid !important;
+	border-top: 0 !important;
+	border-left: 0 !important;
+	border-color: var(--mantine-color-dark-4) !important;
+}
+
+.mantine-CodeHighlightTabs-file[data-active=true] {
+	background-color: var(--mantine-color-dark-6) !important;
+}
+
+.hljs-keyword {
+	color: #ff7b72 !important;
+}
+
+.hljs-title.class_ {
+	color: #e6edf3 !important;
+}
+
+.hljs-title.function_ {
+	color: #d2a8ff !important;
+}
+
+.hljs-string {
+	color: #b1dcff !important;
+}
+
+.hljs-name {
+	color: #7ee787 !important;
+}
+
+.hljs-attr {
+	color: #54aefd !important;
+}

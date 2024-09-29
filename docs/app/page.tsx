@@ -76,7 +76,7 @@ export function App() {
 						<Texture
 							src="./textures/fire_1.png"
 							size="150px"
-							animation={{mcmeta}}
+							animation={{ mcmeta }}
 						/>
 						<Text c="dimmed">fire_1</Text>
 					</Stack>

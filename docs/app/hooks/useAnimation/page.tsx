@@ -54,11 +54,7 @@ export default function useAnimationPage() {
 							<Stack gap={0} align="center">
 								<canvas
 									ref={canvasRef}
-									style={{
-										maxWidth: '150px',
-										height: '150px',
-										border: '1px solid #333'
-									}}
+									className="output-framed"
 								/>
 								<Text c="dimmed">output</Text>
 							</Stack>
@@ -95,11 +91,7 @@ export default function useAnimationPage() {
 							<Stack gap={0} align="center">
 								<canvas
 									ref={canvasRefTiledTrue}
-									style={{
-										maxWidth: '150px',
-										height: '150px',
-										border: '1px solid #333'
-									}}
+									className="output-framed"
 								/>
 								<Text c="dimmed">isTiled: true</Text>
 							</Stack>
@@ -107,11 +99,7 @@ export default function useAnimationPage() {
 							<Stack gap={0} align="center">
 								<canvas
 									ref={canvasRefTiledFalse}
-									style={{
-										maxWidth: '150px',
-										height: '150px',
-										border: '1px solid #333'
-									}}
+									className="output-framed"
 								/>
 								<Text c="dimmed">isTiled: false</Text>
 							</Stack>

@@ -17,6 +17,12 @@ body {
 	color: #fff;
 }
 
+.output-framed {
+	max-width: 150px;
+	height: 150px;
+	border: 1px solid #333;
+}
+
 .mantine-CodeHighlightTabs-root {
 	border: calc(.0625rem* var(--mantine-scale)) solid !important;
 	border-radius: calc(.25rem* var(--mantine-scale)) !important;

@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 
+import { FaPlus } from 'react-icons/fa6';
 import { IoChevronForward } from 'react-icons/io5';
 import { TbFishHook, TbComponents } from 'react-icons/tb';
 
@@ -29,6 +30,14 @@ export function Navbar() {
 				{ href: '/useAnimation', title: 'useAnimation', monospaced: true },
 			]
 		},
+		{
+			icon: <FaPlus />,
+			title: 'Utils',
+			href: '/utils',
+			links: [
+				{ href: '/import-mcmeta', title: 'Import MCMETA files', monospaced: false },
+			]
+		}
 	];
 
 	return (

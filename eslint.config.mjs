@@ -6,7 +6,13 @@ import unusedImports from 'eslint-plugin-unused-imports';
 import importOrder from 'eslint-plugin-import';
 
 export default tseslint.config({
-  files: ['src/**/*.ts{,x}', 'docs/**/*.ts{,x}'],
+  files: [
+		'src/**/*.ts{,x}', 
+		'docs/**/*.ts{,x}'
+	],
+	ignores: [
+		'docs/.next/**',
+	],
   plugins: {
     'unused-imports': unusedImports,
     'import': importOrder,

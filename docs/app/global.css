@@ -9,16 +9,12 @@ body {
 	--docs-content-width: calc(51.25rem * var(--mantine-scale));
 }
 
-.nav-link:hover {
-	background-color: transparent !important;
-}
-
 .code-link {
 	cursor: pointer;
 }
 
 .code-link:hover {
-	background-color: #2e2e2e;
+	color: #fff;
 }
 
 .mantine-CodeHighlightTabs-root {

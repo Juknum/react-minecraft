@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import type { ReactNode } from 'react';
 
 import { Stack, Group, Card, Title, ScrollArea, Button } from '@mantine/core';
-import { GithubIcon } from '@mantinex/dev-icons';
+import { GithubIcon, NpmIcon } from '@mantinex/dev-icons';
 
 import { Navbar } from './navbar';
 
@@ -30,8 +30,14 @@ export function Container({ children }: props) {
 				<Group
 					justify="space-between"
 				>
-					<Title order={4} c="white">React Minecraft</Title>
-					<Button p={8} variant="default" onClick={() => router.push('https://github.com/Juknum/react-minecraft')}><GithubIcon size="18" /></Button>
+					<Group>
+						<img src="/logo.png" alt="React Minecraft" style={{ height: 25 }} />
+						<Title order={4} c="white" tt="uppercase" ff="monospace">React Minecraft</Title>
+					</Group>
+					<Group gap="xs">
+						<Button p={8} variant="default" onClick={() => router.push('https://github.com/Juknum/react-minecraft')}><GithubIcon size="18" /></Button>
+						<Button p={8} variant="default" onClick={() => router.push('https://www.npmjs.com/package/react-minecraft')}><NpmIcon size="18" /></Button>
+					</Group>
 				</Group>
 			</Card>
 			<Group

@@ -30,7 +30,7 @@ interface output {
 	/**
 	 * A reference to the canvas element used for the animation
 	 */
-	canvasRef: React.RefObject<HTMLCanvasElement>;
+	canvasRef: React.RefObject<HTMLCanvasElement | null>;
 	/**
 	 * Determined sprites from the MCMETA data
 	 */
@@ -43,7 +43,7 @@ interface output {
  */
 export function useAnimation({ src, mcmeta, isTiled, isPaused }: params): output {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
-	const tickingRef = useRef<ReturnType<typeof setTimeout>>();
+	const tickingRef = useRef<ReturnType<typeof setTimeout>>(null);
 
 	const [image, setImage] = useState<HTMLImageElement | null>(null);
 	const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null);
@@ -69,7 +69,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: params): output
 			setImage(null);
 			if (tickingRef.current) {
 				clearInterval(tickingRef.current);
-				tickingRef.current = undefined;
+				tickingRef.current = null;
 			}
 		};
 
@@ -189,7 +189,7 @@ export function useAnimation({ src, mcmeta, isTiled, isPaused }: params): output
 		}
 	}, [currentTick, canvas, image, canvasRef, frames]);
 
-	return { 
+	return {
 		canvasRef,
 		sprites,
 	};

@@ -28,7 +28,7 @@ interface BlockModelProps extends Omit<ThreeContainerProps, 'children'>, ThreeCo
 }
 
 export function BlockModel({ model, textures, resolution, style, className, ...props }: BlockModelProps) {
-	const [canvasRefs, setCanvasRefs] = useState<Map<`#${string}`, RefObject<HTMLCanvasElement>>>(new Map());
+	const [canvasRefs, setCanvasRefs] = useState<Map<`#${string}`, RefObject<HTMLCanvasElement | null>>>(new Map());
 	const [ready, setReady] = useState(false);
 
 	for (const texture of Object.keys(model.textures)) {

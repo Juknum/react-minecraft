@@ -10,7 +10,7 @@ import type { face } from '~/types/model.js';
 import { midPoint } from '~/utils/three.js';
 
 export interface FaceProps {
-	canvasRef: React.RefObject<HTMLCanvasElement>;
+	canvasRef: React.RefObject<HTMLCanvasElement | null>;
 	face: face;
 	uv: Vector4;
 	corners: [

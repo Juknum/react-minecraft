@@ -29,7 +29,7 @@ export interface TextureCanvasProps {
 	/**
 	 * The ref to the canvas element
 	 */
-	onCanvasRefUpdate?: (ref: React.RefObject<HTMLCanvasElement>) => void;
+	onCanvasRefUpdate?: (ref: React.RefObject<HTMLCanvasElement | null>) => void;
 }
 
 export function TextureCanvas({ src, mcmeta, isPaused, isTiled, onCanvasRefUpdate, ...props }: TextureCanvasProps & CanvasHTMLAttributes<HTMLCanvasElement>) {

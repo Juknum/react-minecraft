@@ -15,7 +15,7 @@ interface props {
 	from: Vector3;
 	to: Vector3;
 
-	canvas: Map<`#${string}`, RefObject<HTMLCanvasElement>>;
+	canvas: Map<`#${string}`, RefObject<HTMLCanvasElement | null>>;
 	faces: Faces;
 
 	debug?: boolean;

@@ -20,6 +20,39 @@
 			"es2022",
 			"DOM",
 		],
-		"noEmit": true
+		"noEmit": true,
+		"baseUrl": ".",
+		"paths": {
+			"~/components/*": [
+				"./src/components/*"
+			],
+			"~/hooks/*": [
+				"./src/hooks/*"
+			],
+			"~/types/*": [
+				"./src/types/*"
+			],
+			"~/utils/*": [
+				"./src/utils/*"
+			],
+			"~/docs/components/*": [
+				"./docs/components/*"
+			],
+			"~/docs/hooks/*": [
+				"./docs/hooks/*"
+			],
+			"~/docs/public/*": [
+				"./docs/public/*"
+			],
+			"~/docs/types/*": [
+				"./docs/types/*"
+			],
+			"~/docs/utils/*": [
+				"./docs/utils/*"
+			],
+		},
+		"typeRoots": [
+			"types"
+		]
 	}
 }
